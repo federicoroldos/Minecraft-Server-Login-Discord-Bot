@@ -35,6 +35,10 @@ async def main() -> None:
         raise SystemExit("Missing DISCORD_TOKEN. Copy .env.example to .env and fill it in.")
 
     config = load_config(Path("config.json"))
+    log_path = Path(config.log_path)
+    print(f"Config: channel_id={config.channel_id}, log_path={log_path}, start_from_end={config.start_from_end}")
+    if not log_path.exists():
+        print(f"Warning: log_path does not exist (yet): {log_path}")
 
     intents = discord.Intents.none()
     client = discord.Client(intents=intents)
@@ -46,6 +50,7 @@ async def main() -> None:
         if debouncer.allow(event):
             try:
                 queue.put_nowait(event)
+                print(f"Detected {event.type.value}: {event.player}")
             except Exception:
                 pass
 
@@ -84,8 +89,9 @@ async def main() -> None:
             content = template.format(player=event.player)
             try:
                 await channel.send(content)
-            except Exception:
-                pass
+                print(f"Sent to Discord: {content}")
+            except Exception as e:
+                print(f"Failed to send Discord message: {e}")
 
     sender_task = asyncio.create_task(sender_loop())
     try:

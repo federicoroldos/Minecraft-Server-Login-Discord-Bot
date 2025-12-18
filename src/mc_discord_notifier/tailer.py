@@ -27,6 +27,8 @@ class LogTailer:
         self._path = Path(settings.log_path)
         self._buf = b""
         self._offset = 0
+        self._start_offset = 0
+        self._last_fs_error_print = 0.0
 
     def stop(self) -> None:
         self._stop = True
@@ -51,6 +53,7 @@ class LogTailer:
 
     def run_forever(self) -> None:
         self._offset = self._initial_offset()
+        self._start_offset = self._offset
 
         while not self._stop:
             try:
@@ -75,9 +78,9 @@ class LogTailer:
                     ),
                 )
             except FileNotFoundError:
-                pass
-            except OSError:
-                pass
+                self._maybe_print_fs_error(f"Log file not found: {self._path}")
+            except OSError as e:
+                self._maybe_print_fs_error(f"Unable to read log file {self._path}: {e}")
 
             time.sleep(self._settings.poll_interval_seconds)
 
@@ -94,4 +97,11 @@ class LogTailer:
             event = parse_line(line)
             if event:
                 self._on_event(event)
+
+    def _maybe_print_fs_error(self, message: str) -> None:
+        # Avoid spamming the console if the file is missing/locked.
+        now = time.time()
+        if now - self._last_fs_error_print >= 10.0:
+            print(message)
+            self._last_fs_error_print = now
 

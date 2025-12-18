@@ -1,12 +1,11 @@
 {
   "channel_id": 0,
-  "log_path": "C:\\\\Servers PC Ñapo\\\\Forever Server (former Servidor 1.21)\\\\logs\\\\latest.log",
+  "log_path": "C:\\\\path\\\\to\\\\your\\\\server\\\\logs\\\\latest.log",
   "start_from_end": true,
   "poll_interval_seconds": 0.25,
   "debounce_seconds": 2.0,
   "messages": {
-    "join": "🟢 **{player}** joined the server",
-    "leave": "🔴 **{player}** left the server"
+    "join": "[+] **{player}** joined the server",
+    "leave": "[-] **{player}** left the server"
   }
 }
-

@@ -18,7 +18,9 @@ class AppConfig:
 
 def load_config(path: str | Path) -> AppConfig:
     config_path = Path(path)
-    raw = json.loads(config_path.read_text(encoding="utf-8"))
+    # PowerShell `Out-File -Encoding utf8` writes a UTF-8 BOM by default, so
+    # accept both UTF-8 and UTF-8-with-BOM.
+    raw = json.loads(config_path.read_text(encoding="utf-8-sig"))
 
     def get(key: str, default: Any = None) -> Any:
         return raw[key] if key in raw else default

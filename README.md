@@ -39,4 +39,4 @@ On first run, the script will prompt you for:
 If you want it to start posting immediately on launch, set `start_from_end` to `false` (otherwise it starts at the end to avoid spamming old logins).
 
 ## Notes
-- Python 3.13: this repo installs `audioop-lts` because `audioop` was removed from the Python standard library.
+- Python 3.13+: this repo installs `audioop-lts` because `audioop` was removed from the Python standard library.
