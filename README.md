@@ -5,6 +5,7 @@ A simple connection between Discord and your own Minecraft server that sends not
 Runs a Discord bot on your Windows PC and watches your Spigot `latest.log`. When it sees lines like:
 - `[Server thread/INFO]: [+] playerName`
 - `[Server thread/INFO]: [-] playerName`
+- `[Server thread/INFO]: playerName was slain by Zombie`
 
 it posts a message to a Discord channel.
 
@@ -32,11 +33,19 @@ From the repo folder `MinecraftServerNotifications`:
 1. Run:
    - `.\run.ps1`
 
+Alternatively, if you already created the virtual environment and installed dependencies, you can start the bot directly:
+- `.\.venv\Scripts\python -u .\bot.py`
+
 On first run, the script will prompt you for:
 - `DISCORD_TOKEN` (saved into `.env`)
 - `channel_id` and `log_path` (saved into `config.json`)
 
 If you want it to start posting immediately on launch, set `start_from_end` to `false` (otherwise it starts at the end to avoid spamming old logins).
+
+## Message templates
+Edit `config.json` -> `messages`:
+- `join` and `leave` support `{player}`
+- `death` supports `{message}` (the full Minecraft death message) and `{player}`
 
 ## Troubleshooting
 - Bot doesn't post anything: make sure `config.json` points to the real `logs\\latest.log` via `log_path`.

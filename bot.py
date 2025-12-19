@@ -82,11 +82,16 @@ async def main() -> None:
 
         join_template = (config.messages or {}).get("join", "**{player}** joined")
         leave_template = (config.messages or {}).get("leave", "**{player}** left")
+        death_template = (config.messages or {}).get("death", "{message}")
 
         while not client.is_closed():
             event = await queue.get()
-            template = join_template if event.type == EventType.JOIN else leave_template
-            content = template.format(player=event.player)
+            if event.type == EventType.JOIN:
+                content = join_template.format(player=event.player)
+            elif event.type == EventType.LEAVE:
+                content = leave_template.format(player=event.player)
+            else:
+                content = death_template.format(player=event.player, message=(event.message or ""))
             try:
                 await channel.send(content)
                 print(f"Sent to Discord: {content}")

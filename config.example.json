@@ -6,6 +6,7 @@
   "debounce_seconds": 2.0,
   "messages": {
     "join": "[+] **{player}** joined the server",
-    "leave": "[-] **{player}** left the server"
+    "leave": "[-] **{player}** left the server",
+    "death": "{message}"
   }
 }
